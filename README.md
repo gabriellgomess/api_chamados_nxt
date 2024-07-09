@@ -15,7 +15,7 @@ Esta é uma API desenvolvida em Laravel 11 para gerenciar um sistema de chamados
 
 1. Clone o repositório:
     ```bash
-    git clone https://github.com/seu-usuario/sistema-de-chamados.git
+    git clone https://github.com/seu-usuario/api_chamados_nxt.git    
     cd sistema-de-chamados
     ```
 
