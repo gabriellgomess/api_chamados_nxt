@@ -1,0 +1,1372 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "API de Chamados",
+        "description": "Documentação da API de Chamados",
+        "version": "1.0.0"
+    },
+    "paths": {
+        "/api/login": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Realiza a autenticação do usuário",
+                "description": "Este método tenta autenticar o usuário com as credenciais fornecidas. Se a autenticação for bem-sucedida, retorna o usuário autenticado juntamente com um token de acesso. Se a autenticação falhar, retorna uma mensagem de erro.",
+                "operationId": "f74109d26aab35daab2d8c617c97c3fa",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "user@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário autenticado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "token-de-acesso"
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Login ou senha incorreta",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Login ou senha incorreta."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        "/api/register": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Registrar um novo usuário",
+                "description": "Este método registra um novo usuário no sistema.",
+                "operationId": "1c04d9f4201ccf0f1b26dee66e881ff2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Gabriel Gomes"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "gabriel.gomes@outlook.com"
+                                    },
+                                    "telefone": {
+                                        "type": "string",
+                                        "example": "51997073430"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "10203040"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "10203040"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário registrado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "user": {
+                                            "$ref": "#/components/schemas/User"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/logout/{user}": {
+            "post": {
+                "tags": [
+                    "Auth"
+                ],
+                "summary": "Realiza o logout do usuário",
+                "description": "Este método revoga todos os tokens de acesso associados ao usuário, efetuando assim o logout.",
+                "operationId": "020ae3079882e2276435982e21aa2f97",
+                "parameters": [
+                    {
+                        "name": "user",
+                        "in": "path",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Deslogado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": true
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Deslogado com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Erro ao deslogar",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "status": {
+                                            "type": "boolean",
+                                            "example": false
+                                        },
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Não deslogado."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/atendentes": {
+            "get": {
+                "tags": [
+                    "Atendentes"
+                ],
+                "summary": "Lista todos os atendentes",
+                "operationId": "33bd1bc7c40ea5213970acc8ea2fb48f",
+                "responses": {
+                    "200": {
+                        "description": "Lista de atendentes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/Atendente"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Atendentes"
+                ],
+                "summary": "Cria um novo atendente",
+                "operationId": "4b4ccea6c45147e885ec0eb8d60e6418",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Nome do Atendente"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "atendente@example.com"
+                                    },
+                                    "telefone": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    },
+                                    "setor_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "is_gestor": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Atendente criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Atendente"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/atendentes/{id}": {
+            "get": {
+                "tags": [
+                    "Atendentes"
+                ],
+                "summary": "Mostra um atendente específico",
+                "operationId": "3311e63c00585237a55bbca654ee5d4d",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do atendente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do atendente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Atendente"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Atendente não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Atendentes"
+                ],
+                "summary": "Atualiza um atendente existente",
+                "operationId": "6f1b3ddc8ccd3ee0127156fc6ea85bc5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do atendente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "email"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Nome do Atendente"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "atendente@example.com"
+                                    },
+                                    "telefone": {
+                                        "type": "string",
+                                        "example": "123456789"
+                                    },
+                                    "setor_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "is_gestor": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Atendente atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Atendente"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Atendente não encontrado"
+                    },
+                    "400": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Atendentes"
+                ],
+                "summary": "Deleta um atendente",
+                "operationId": "6a16e8795dce57d89d9166d2d323aaaa",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do atendente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Atendente deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Atendente não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/centros_de_custo": {
+            "get": {
+                "tags": [
+                    "Centros de Custo"
+                ],
+                "summary": "Lista todos os centros de custo",
+                "operationId": "17581cf75260e9efbbea4d018d7b5155",
+                "responses": {
+                    "200": {
+                        "description": "Lista de centros de custo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/CentroDeCusto"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Centros de Custo"
+                ],
+                "summary": "Cria um novo centro de custo",
+                "operationId": "e4e823d08ca2c2ec2d6f7860c6a03fe9",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "descricao",
+                                    "codigo"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Nome do Centro de Custo"
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "Descrição do Centro de Custo"
+                                    },
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "001"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Centro de custo criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CentroDeCusto"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/centros_de_custo/{id}": {
+            "get": {
+                "tags": [
+                    "Centros de Custo"
+                ],
+                "summary": "Mostra um centro de custo específico",
+                "operationId": "ef3ce3526ce410534267cc8dd4dfc4d8",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do centro de custo",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do centro de custo",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CentroDeCusto"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Centro de custo não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Centros de Custo"
+                ],
+                "summary": "Atualiza um centro de custo existente",
+                "operationId": "50a11089f91fc731efe0167728b12d6e",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do centro de custo",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "descricao",
+                                    "codigo"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Nome do Centro de Custo"
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "Descrição do Centro de Custo"
+                                    },
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "001"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Centro de custo atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/CentroDeCusto"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Centro de custo não encontrado"
+                    },
+                    "400": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Centros de Custo"
+                ],
+                "summary": "Deleta um centro de custo",
+                "operationId": "244d4e45ebf63f148ca036de38722f98",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do centro de custo",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Centro de custo deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Centro de custo não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/setores_atendentes": {
+            "get": {
+                "tags": [
+                    "Setores Atendentes"
+                ],
+                "summary": "Lista todos os setores atendentes",
+                "operationId": "02e4af9279435e49b0863f0c953cfb00",
+                "responses": {
+                    "200": {
+                        "description": "Lista de setores atendentes",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/SetorAtendente"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Setores Atendentes"
+                ],
+                "summary": "Cria um novo setor atendente",
+                "operationId": "600da9c3ade6016ece671251c5be144c",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "setor_id",
+                                    "atendente_id",
+                                    "is_gestor"
+                                ],
+                                "properties": {
+                                    "setor_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "atendente_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "is_gestor": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Setor atendente criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SetorAtendente"
+                                }
+                            }
+                        }
+                    },
+                    "400": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/setores_atendentes/{id}": {
+            "get": {
+                "tags": [
+                    "Setores Atendentes"
+                ],
+                "summary": "Mostra um setor atendente específico",
+                "operationId": "fa45443a0babd2801fb0680cc040871b",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do setor atendente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do setor atendente",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SetorAtendente"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Setor atendente não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Setores Atendentes"
+                ],
+                "summary": "Atualiza um setor atendente existente",
+                "operationId": "4c5136b610ca01a6dcaa5c4189766e66",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do setor atendente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "setor_id",
+                                    "atendente_id",
+                                    "is_gestor"
+                                ],
+                                "properties": {
+                                    "setor_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "atendente_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    },
+                                    "is_gestor": {
+                                        "type": "boolean",
+                                        "example": false
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Setor atendente atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/SetorAtendente"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Setor atendente não encontrado"
+                    },
+                    "400": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Setores Atendentes"
+                ],
+                "summary": "Deleta um setor atendente",
+                "operationId": "473410374b4cdf502f38027db5382e51",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do setor atendente",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Setor atendente deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Setor atendente não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/setores": {
+            "get": {
+                "tags": [
+                    "Setores"
+                ],
+                "summary": "Lista todos os setores",
+                "operationId": "6e3422aca1dbf481d8400e6765284b3c",
+                "responses": {
+                    "200": {
+                        "description": "Lista de setores"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Setores"
+                ],
+                "summary": "Cria um novo setor",
+                "operationId": "89fbedc0576cee6b4cdf9442076406a1",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "centro_de_custo_id"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Nome do Setor"
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "Descrição do Setor"
+                                    },
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "001"
+                                    },
+                                    "centro_de_custo_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Setor criado com sucesso"
+                    },
+                    "400": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/setores/{id}": {
+            "get": {
+                "tags": [
+                    "Setores"
+                ],
+                "summary": "Mostra um setor específico",
+                "operationId": "cf459769bcf2e95e5e25dad57ad599de",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do setor",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do setor"
+                    },
+                    "404": {
+                        "description": "Setor não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Setores"
+                ],
+                "summary": "Atualiza um setor existente",
+                "operationId": "b0e404fd563c40065cc1f1154241a53f",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do setor",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "nome",
+                                    "centro_de_custo_id"
+                                ],
+                                "properties": {
+                                    "nome": {
+                                        "type": "string",
+                                        "example": "Nome do Setor"
+                                    },
+                                    "descricao": {
+                                        "type": "string",
+                                        "example": "Descrição do Setor"
+                                    },
+                                    "codigo": {
+                                        "type": "string",
+                                        "example": "001"
+                                    },
+                                    "centro_de_custo_id": {
+                                        "type": "integer",
+                                        "example": 1
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Setor atualizado com sucesso"
+                    },
+                    "404": {
+                        "description": "Setor não encontrado"
+                    },
+                    "400": {
+                        "description": "Dados inválidos"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Setores"
+                ],
+                "summary": "Deleta um setor",
+                "operationId": "0d6a000dd76d8ed97b480b6bb98b29a5",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do setor",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "204": {
+                        "description": "Setor deletado com sucesso"
+                    },
+                    "404": {
+                        "description": "Setor não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/usuarios": {
+            "get": {
+                "tags": [
+                    "Users"
+                ],
+                "summary": "Lista todos os usuários",
+                "operationId": "def965050e08426437080b9f93650872",
+                "responses": {
+                    "200": {
+                        "description": "Lista de usuários",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/User"
+                                    }
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "schemas": {
+            "Atendente": {
+                "required": [
+                    "nome",
+                    "email",
+                    "telefone"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "email": {
+                        "type": "string"
+                    },
+                    "telefone": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                },
+                "type": "object"
+            },
+            "CentroDeCusto": {
+                "required": [
+                    "nome",
+                    "descricao",
+                    "codigo"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "codigo": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                },
+                "type": "object"
+            },
+            "Setor": {
+                "required": [
+                    "centro_de_custo_id",
+                    "nome",
+                    "descricao",
+                    "codigo"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "centro_de_custo_id": {
+                        "type": "integer"
+                    },
+                    "nome": {
+                        "type": "string"
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "codigo": {
+                        "type": "string"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                },
+                "type": "object"
+            },
+            "SetorAtendente": {
+                "required": [
+                    "setor_id",
+                    "atendente_id",
+                    "is_gestor"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "setor_id": {
+                        "type": "integer"
+                    },
+                    "atendente_id": {
+                        "type": "integer"
+                    },
+                    "is_gestor": {
+                        "type": "boolean"
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    }
+                },
+                "type": "object"
+            },
+            "User": {
+                "title": "User",
+                "description": "User model",
+                "required": [
+                    "id",
+                    "name",
+                    "email"
+                ],
+                "properties": {
+                    "id": {
+                        "description": "User ID",
+                        "type": "integer",
+                        "example": 1
+                    },
+                    "name": {
+                        "description": "User's name",
+                        "type": "string",
+                        "example": "Gabriel Gomes"
+                    },
+                    "email": {
+                        "description": "User's email address",
+                        "type": "string",
+                        "format": "email",
+                        "example": "gabriel.gomes@outlook.com"
+                    },
+                    "created_at": {
+                        "description": "Timestamp when the user was created",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00.000Z"
+                    },
+                    "updated_at": {
+                        "description": "Timestamp when the user was last updated",
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2023-01-01T00:00:00.000Z"
+                    }
+                },
+                "type": "object"
+            }
+        },
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Atendentes",
+            "description": "Operações relacionadas aos atendentes"
+        },
+        {
+            "name": "Centros de Custo",
+            "description": "Operações relacionadas aos centros de custo"
+        },
+        {
+            "name": "Setores Atendentes",
+            "description": "Operações relacionadas aos setores atendentes"
+        },
+        {
+            "name": "Setores",
+            "description": "API Endpoints de Setores"
+        },
+        {
+            "name": "Auth",
+            "description": "Auth"
+        },
+        {
+            "name": "Users",
+            "description": "Users"
+        }
+    ]
+}
