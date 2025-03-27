@@ -7,6 +7,7 @@ use App\Http\Controllers\CentroDeCustoController;
 use App\Http\Controllers\SetorController;
 use App\Http\Controllers\AtendenteController;
 use App\Http\Controllers\SetorAtendenteController;
+use App\Http\Controllers\ChamadoController;
 
 // Rota pública
 //Swagger
@@ -21,7 +22,7 @@ Route::post('/register', [LoginController::class, 'register']);
 
 // Rota restrita
 Route::group(['middleware' => ['auth:sanctum']], function () {
- 
+
     // POST - http://127.0.0.1:8000/api/logout/1
     Route::post('/logout/{user}', [LoginController::class, 'logout']);
 
@@ -32,4 +33,10 @@ Route::group(['middleware' => ['auth:sanctum']], function () {
     Route::apiResource('/setores', SetorController::class);
     Route::apiResource('/atendentes', AtendenteController::class);
     Route::apiResource('/setores_atendentes', SetorAtendenteController::class);
+
+    // Rotas de Chamados
+    Route::apiResource('chamados', ChamadoController::class);
+    Route::post('chamados/{chamado}/transferir', [ChamadoController::class, 'transferir']);
+    Route::post('chamados/{chamado}/resolver', [ChamadoController::class, 'resolver']);
+    Route::get('chamados/{chamado}/historico', [ChamadoController::class, 'historico']);
 });

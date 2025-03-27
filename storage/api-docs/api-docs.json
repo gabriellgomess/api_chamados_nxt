@@ -699,6 +699,443 @@
                 ]
             }
         },
+        "/api/chamados": {
+            "get": {
+                "tags": [
+                    "Chamados"
+                ],
+                "summary": "Lista todos os chamados",
+                "description": "Retorna uma lista paginada de chamados com opções de filtro",
+                "operationId": "indexChamados",
+                "parameters": [
+                    {
+                        "name": "status",
+                        "in": "query",
+                        "description": "Filtrar por status do chamado",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "aberto",
+                                "em_andamento",
+                                "transferido",
+                                "resolvido",
+                                "fechado"
+                            ]
+                        }
+                    },
+                    {
+                        "name": "setor_id",
+                        "in": "query",
+                        "description": "Filtrar por setor",
+                        "required": false,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    },
+                    {
+                        "name": "prioridade",
+                        "in": "query",
+                        "description": "Filtrar por prioridade",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "baixa",
+                                "media",
+                                "alta",
+                                "urgente"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de chamados retornada com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "$ref": "#/components/schemas/Chamado"
+                                            }
+                                        },
+                                        "meta": {
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Chamados"
+                ],
+                "summary": "Cria um novo chamado",
+                "description": "Cria um novo chamado no sistema",
+                "operationId": "storeChamado",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "titulo",
+                                    "descricao",
+                                    "setor_id",
+                                    "prioridade"
+                                ],
+                                "properties": {
+                                    "titulo": {
+                                        "type": "string",
+                                        "maxLength": 255
+                                    },
+                                    "descricao": {
+                                        "type": "string"
+                                    },
+                                    "setor_id": {
+                                        "type": "integer"
+                                    },
+                                    "prioridade": {
+                                        "type": "string",
+                                        "enum": [
+                                            "baixa",
+                                            "media",
+                                            "alta",
+                                            "urgente"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Chamado criado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Chamado"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/chamados/{id}": {
+            "get": {
+                "tags": [
+                    "Chamados"
+                ],
+                "summary": "Obtém detalhes de um chamado",
+                "description": "Retorna os detalhes completos de um chamado específico",
+                "operationId": "showChamado",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do chamado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes do chamado retornados com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Chamado"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Chamado não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Chamados"
+                ],
+                "summary": "Atualiza um chamado",
+                "description": "Atualiza os dados de um chamado existente",
+                "operationId": "updateChamado",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do chamado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "properties": {
+                                    "status": {
+                                        "type": "string",
+                                        "enum": [
+                                            "aberto",
+                                            "em_andamento",
+                                            "transferido",
+                                            "resolvido",
+                                            "fechado"
+                                        ]
+                                    },
+                                    "prioridade": {
+                                        "type": "string",
+                                        "enum": [
+                                            "baixa",
+                                            "media",
+                                            "alta",
+                                            "urgente"
+                                        ]
+                                    },
+                                    "observacoes": {
+                                        "type": "string"
+                                    },
+                                    "setor_id": {
+                                        "type": "integer"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Chamado atualizado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Chamado"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Chamado não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/chamados/{id}/transferir": {
+            "post": {
+                "tags": [
+                    "Chamados"
+                ],
+                "summary": "Transfere um chamado para outro setor",
+                "description": "Transfere um chamado para um setor diferente",
+                "operationId": "transferirChamado",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do chamado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "setor_id",
+                                    "observacoes"
+                                ],
+                                "properties": {
+                                    "setor_id": {
+                                        "type": "integer"
+                                    },
+                                    "observacoes": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Chamado transferido com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Chamado"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Chamado não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/chamados/{id}/resolver": {
+            "post": {
+                "tags": [
+                    "Chamados"
+                ],
+                "summary": "Resolve um chamado",
+                "description": "Marca um chamado como resolvido",
+                "operationId": "resolverChamado",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do chamado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "observacoes"
+                                ],
+                                "properties": {
+                                    "observacoes": {
+                                        "type": "string"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Chamado resolvido com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/Chamado"
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Chamado não encontrado"
+                    },
+                    "422": {
+                        "description": "Erro de validação"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/chamados/{id}/historico": {
+            "get": {
+                "tags": [
+                    "Chamados"
+                ],
+                "summary": "Obtém o histórico de um chamado",
+                "description": "Retorna o histórico completo de alterações de um chamado específico",
+                "operationId": "historicoChamado",
+                "parameters": [
+                    {
+                        "name": "id",
+                        "in": "path",
+                        "description": "ID do chamado",
+                        "required": true,
+                        "schema": {
+                            "type": "integer"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Histórico do chamado retornado com sucesso",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "type": "array",
+                                    "items": {
+                                        "$ref": "#/components/schemas/HistoricoChamado"
+                                    }
+                                }
+                            }
+                        }
+                    },
+                    "404": {
+                        "description": "Chamado não encontrado"
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
         "/api/setores_atendentes": {
             "get": {
                 "tags": [
@@ -1178,6 +1615,10 @@
                     "telefone": {
                         "type": "string"
                     },
+                    "user_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
                     "created_at": {
                         "type": "string",
                         "format": "date-time",
@@ -1187,6 +1628,15 @@
                         "type": "string",
                         "format": "date-time",
                         "readOnly": true
+                    },
+                    "user": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "setores": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/Setor"
+                        }
                     }
                 },
                 "type": "object"
@@ -1220,6 +1670,154 @@
                         "type": "string",
                         "format": "date-time",
                         "readOnly": true
+                    }
+                },
+                "type": "object"
+            },
+            "Chamado": {
+                "required": [
+                    "titulo",
+                    "descricao",
+                    "setor_id",
+                    "prioridade"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "titulo": {
+                        "type": "string",
+                        "maxLength": 255
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "status": {
+                        "type": "string",
+                        "enum": [
+                            "aberto",
+                            "em_andamento",
+                            "transferido",
+                            "resolvido",
+                            "fechado"
+                        ]
+                    },
+                    "prioridade": {
+                        "type": "string",
+                        "enum": [
+                            "baixa",
+                            "media",
+                            "alta",
+                            "urgente"
+                        ]
+                    },
+                    "setor_id": {
+                        "type": "integer"
+                    },
+                    "solicitante_id": {
+                        "type": "integer"
+                    },
+                    "atendente_id": {
+                        "type": "integer",
+                        "nullable": true
+                    },
+                    "data_inicio": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "data_fim": {
+                        "type": "string",
+                        "format": "date-time",
+                        "nullable": true
+                    },
+                    "observacoes": {
+                        "type": "string",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "setor": {
+                        "$ref": "#/components/schemas/Setor"
+                    },
+                    "solicitante": {
+                        "$ref": "#/components/schemas/User"
+                    },
+                    "atendente": {
+                        "$ref": "#/components/schemas/Atendente"
+                    },
+                    "historico": {
+                        "type": "array",
+                        "items": {
+                            "$ref": "#/components/schemas/HistoricoChamado"
+                        }
+                    }
+                },
+                "type": "object"
+            },
+            "HistoricoChamado": {
+                "required": [
+                    "chamado_id",
+                    "usuario_id",
+                    "acao",
+                    "descricao"
+                ],
+                "properties": {
+                    "id": {
+                        "type": "integer",
+                        "readOnly": true
+                    },
+                    "chamado_id": {
+                        "type": "integer"
+                    },
+                    "usuario_id": {
+                        "type": "integer"
+                    },
+                    "acao": {
+                        "type": "string",
+                        "enum": [
+                            "criacao",
+                            "atualizacao",
+                            "transferencia",
+                            "resolucao",
+                            "fechamento"
+                        ]
+                    },
+                    "descricao": {
+                        "type": "string"
+                    },
+                    "dados_anteriores": {
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "dados_novos": {
+                        "type": "object",
+                        "nullable": true
+                    },
+                    "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "updated_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "readOnly": true
+                    },
+                    "chamado": {
+                        "$ref": "#/components/schemas/Chamado"
+                    },
+                    "usuario": {
+                        "$ref": "#/components/schemas/User"
                     }
                 },
                 "type": "object"
@@ -1330,6 +1928,9 @@
                         "type": "string",
                         "format": "date-time",
                         "example": "2023-01-01T00:00:00.000Z"
+                    },
+                    "atendente": {
+                        "$ref": "#/components/schemas/Atendente"
                     }
                 },
                 "type": "object"
@@ -1351,6 +1952,10 @@
         {
             "name": "Centros de Custo",
             "description": "Operações relacionadas aos centros de custo"
+        },
+        {
+            "name": "Chamados",
+            "description": "API Endpoints para gerenciamento de chamados"
         },
         {
             "name": "Setores Atendentes",
