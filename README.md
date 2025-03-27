@@ -1,6 +1,26 @@
 # Sistema de Gerenciamento de Chamados
 
-Esta é uma API desenvolvida em Laravel 11 para gerenciar um sistema de chamados.
+Sistema desenvolvido em Laravel 11 para gerenciamento de chamados de suporte, permitindo a criação, acompanhamento e resolução de chamados por diferentes setores da organização.
+
+## Funcionalidades
+
+- **Gestão de Estrutura Organizacional**
+  - Centros de Custo
+  - Setores
+  - Atendentes
+  - Usuários
+
+- **Gestão de Chamados**
+  - Criação de chamados
+  - Atribuição de prioridades
+  - Transferência entre setores
+  - Histórico de alterações
+  - Resolução de chamados
+
+- **Controle de Acesso**
+  - Autenticação via API
+  - Diferentes níveis de acesso (Usuário/Atendente)
+  - Visualização restrita por setor
 
 ## Requisitos
 
@@ -11,258 +31,167 @@ Esta é uma API desenvolvida em Laravel 11 para gerenciar um sistema de chamados
 
 ## Instalação
 
-### Backend (Laravel)
+### 1. Clone o Repositório
+```bash
+git clone https://github.com/seu-usuario/api_chamados_nxt.git
+cd api_chamados_nxt
+```
 
-1. Clone o repositório:
-    ```bash
-    git clone https://github.com/seu-usuario/api_chamados_nxt.git    
-    cd sistema-de-chamados
-    ```
+### 2. Instale as Dependências
+```bash
+composer install
+```
 
-2. Instale as dependências do PHP com o Composer:
-    ```bash
-    composer install
-    ```
+### 3. Configure o Ambiente
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-3. Copie o arquivo `.env.example` para `.env` e configure as variáveis de ambiente, especialmente o banco de dados:
-    ```bash
-    cp .env.example .env
-    ```
+### 4. Configure o Banco de Dados
+Edite o arquivo `.env` e configure as credenciais do banco de dados:
+```env
+DB_CONNECTION=mysql
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_DATABASE=seu_banco
+DB_USERNAME=seu_usuario
+DB_PASSWORD=sua_senha
+```
 
-4. Gere a chave da aplicação:
-    ```bash
-    php artisan key:generate
-    ```
+### 5. Execute as Migrações
+```bash
+php artisan migrate
+```
 
-5. Execute as migrações para criar as tabelas no banco de dados:
-    ```bash
-    php artisan migrate
-    ```
+### 6. Popule o Banco com Dados Iniciais (Opcional)
+```bash
+php artisan db:seed
+```
 
-6. (Opcional) Popule o banco de dados com dados fictícios:
-    ```bash
-    php artisan db:seed
-    ```
+### 7. Inicie o Servidor
+```bash
+php artisan serve
+```
 
-7. Inicie o servidor de desenvolvimento:
-    ```bash
-    php artisan serve
-    ```
+## Estrutura do Sistema
 
-## Endpoints da API
+### Hierarquia Organizacional
+1. **Centros de Custo**
+   - Representam as áreas principais da organização
+   - Exemplo: TI, RH, Financeiro
+
+2. **Setores**
+   - Subdivisões dos Centros de Custo
+   - Exemplo: Suporte TI, Desenvolvimento, Infraestrutura
+
+3. **Atendentes**
+   - Membros da equipe que atendem os chamados
+   - Vinculados a um ou mais setores
+   - Possuem um usuário associado no sistema
+
+4. **Usuários**
+   - Podem ser solicitantes ou atendentes
+   - Atendentes têm um perfil específico vinculado
+
+### Fluxo de Chamados
+
+1. **Criação**
+   - Usuário cria um chamado selecionando o setor
+   - Define título, descrição e prioridade
+   - O chamado é criado com status "aberto"
+
+2. **Atendimento**
+   - Atendentes do setor veem o chamado em sua lista
+   - Podem atualizar status e adicionar observações
+   - Podem transferir para outro setor se necessário
+
+3. **Resolução**
+   - Atendente marca o chamado como resolvido
+   - Adiciona observações sobre a resolução
+   - O chamado é fechado com data de finalização
+
+## API Endpoints
 
 ### Autenticação
-
-- **Login**
-    ```http
-    POST /api/login
-    ```
-    Body:
-    ```json
-    {
-        "email": "seu-email@example.com",
-        "password": "sua-senha"
-    }
-    ```
-
-- **Registro**
-    ```http
-    POST /api/register
-    ```
-    Body:
-    ```json
-    {
-        "name": "Seu Nome",
-        "email": "seu-email@example.com",
-        "password": "sua-senha",
-        "password_confirmation": "sua-senha",
-        "telefone": "123456789" // opcional
-    }
-    ```
-
-- **Logout**
-    ```http
-    POST /api/logout/{user}
-    ```
+```
+POST /api/login
+POST /api/register
+POST /api/logout
+```
 
 ### Centros de Custo
-
-- **Listar todos os centros de custo**
-    ```http
-    GET /api/centros_de_custo
-    ```
-
-- **Mostrar um centro de custo específico**
-    ```http
-    GET /api/centros_de_custo/{id}
-    ```
-
-- **Criar um novo centro de custo**
-    ```http
-    POST /api/centros_de_custo
-    ```
-    Body:
-    ```json
-    {
-        "nome": "Nome do Centro",
-        "descricao": "Descrição do Centro",
-        "codigo": "001"
-    }
-    ```
-
-- **Atualizar um centro de custo existente**
-    ```http
-    PUT /api/centros_de_custo/{id}
-    ```
-    Body:
-    ```json
-    {
-        "nome": "Nome Atualizado",
-        "descricao": "Descrição Atualizada",
-        "codigo": "002"
-    }
-    ```
-
-- **Deletar um centro de custo**
-    ```http
-    DELETE /api/centros_de_custo/{id}
-    ```
+```
+GET    /api/centros_de_custo
+POST   /api/centros_de_custo
+GET    /api/centros_de_custo/{id}
+PUT    /api/centros_de_custo/{id}
+DELETE /api/centros_de_custo/{id}
+```
 
 ### Setores
-
-- **Listar todos os setores**
-    ```http
-    GET /api/setores
-    ```
-
-- **Mostrar um setor específico**
-    ```http
-    GET /api/setores/{id}
-    ```
-
-- **Criar um novo setor**
-    ```http
-    POST /api/setores
-    ```
-    Body:
-    ```json
-    {
-        "nome": "Nome do Setor",
-        "descricao": "Descrição do Setor",
-        "codigo": "001",
-        "centro_de_custo_id": 1
-    }
-    ```
-
-- **Atualizar um setor existente**
-    ```http
-    PUT /api/setores/{id}
-    ```
-    Body:
-    ```json
-    {
-        "nome": "Nome Atualizado",
-        "descricao": "Descrição Atualizada",
-        "codigo": "002",
-        "centro_de_custo_id": 1
-    }
-    ```
-
-- **Deletar um setor**
-    ```http
-    DELETE /api/setores/{id}
-    ```
+```
+GET    /api/setores
+POST   /api/setores
+GET    /api/setores/{id}
+PUT    /api/setores/{id}
+DELETE /api/setores/{id}
+```
 
 ### Atendentes
+```
+GET    /api/atendentes
+POST   /api/atendentes
+GET    /api/atendentes/{id}
+PUT    /api/atendentes/{id}
+DELETE /api/atendentes/{id}
+```
 
-- **Listar todos os atendentes**
-    ```http
-    GET /api/atendentes
-    ```
+### Chamados
+```
+GET    /api/chamados
+POST   /api/chamados
+GET    /api/chamados/{id}
+PUT    /api/chamados/{id}
+GET    /api/chamados/{id}/historico
+POST   /api/chamados/{id}/transferir
+POST   /api/chamados/{id}/resolver
+```
 
-- **Mostrar um atendente específico**
-    ```http
-    GET /api/atendentes/{id}
-    ```
+## Documentação da API
 
-- **Criar um novo atendente**
-    ```http
-    POST /api/atendentes
-    ```
-    Body:
-    ```json
-    {
-        "nome": "Nome do Atendente",
-        "email": "atendente@example.com",
-        "telefone": "123456789",
-        "setor_id": 1, // opcional
-        "is_gestor": false // opcional
-    }
-    ```
+A documentação completa da API está disponível através do Swagger UI após iniciar o servidor:
+```
+http://localhost:8000/api/documentation
+```
 
-- **Atualizar um atendente existente**
-    ```http
-    PUT /api/atendentes/{id}
-    ```
-    Body:
-    ```json
-    {
-        "nome": "Nome Atualizado",
-        "email": "atualizado@example.com",
-        "telefone": "987654321",
-        "setor_id": 1, // opcional
-        "is_gestor": false // opcional
-    }
-    ```
+## Segurança
 
-- **Deletar um atendente**
-    ```http
-    DELETE /api/atendentes/{id}
-    ```
+- Autenticação via Sanctum
+- Tokens de acesso
+- Controle de acesso baseado em setor
+- Histórico de todas as alterações
 
-### Setores Atendentes
+## Desenvolvimento
 
-- **Listar todos os setores atendentes**
-    ```http
-    GET /api/setores_atendentes
-    ```
+### Gerar Documentação Swagger
+```bash
+php artisan l5-swagger:generate
+```
 
-- **Mostrar um setor atendente específico**
-    ```http
-    GET /api/setores_atendentes/{id}
-    ```
+### Executar Testes
+```bash
+php artisan test
+```
 
-- **Criar um novo setor atendente**
-    ```http
-    POST /api/setores_atendentes
-    ```
-    Body:
-    ```json
-    {
-        "setor_id": 1,
-        "atendente_id": 1,
-        "is_gestor": false
-    }
-    ```
+## Contribuição
 
-- **Atualizar um setor atendente existente**
-    ```http
-    PUT /api/setores_atendentes/{id}
-    ```
-    Body:
-    ```json
-    {
-        "setor_id": 1,
-        "atendente_id": 1,
-        "is_gestor": false
-    }
-    ```
-
-- **Deletar um setor atendente**
-    ```http
-    DELETE /api/setores_atendentes/{id}
-    ```
+1. Faça um Fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
 ## Licença
 
-Este projeto está licenciado sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
