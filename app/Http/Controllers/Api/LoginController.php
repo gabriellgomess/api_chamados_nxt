@@ -83,6 +83,7 @@ class LoginController extends Controller
      *             @OA\Property(property="email", type="string", format="email", example="gabriel.gomes@outlook.com"),
      *            @OA\Property(property="telefone", type="string", example="51997073430"),
      *             @OA\Property(property="password", type="string", format="password", example="10203040"),
+     *             @OA\Property(property="level_access", type="interger", format="number", example="0"),
      *             @OA\Property(property="password_confirmation", type="string", format="password", example="10203040")
      *         ),
      *     ),
@@ -103,6 +104,7 @@ class LoginController extends Controller
             'name' => 'required|string',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed',
+            'level_access' => 'required|min:0|max:3',
             'telefone' => 'nullable|string',
         ]);
 
@@ -112,6 +114,7 @@ class LoginController extends Controller
             'email' => $request->email,
             'telefone' => $request->telefone, // Adiciona o telefone
             'password' => Hash::make($request->password),
+            'level_access' => $request->level_access,
         ]);
 
         return response()->json([

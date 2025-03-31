@@ -18,6 +18,7 @@ class UserSeeder extends Seeder
             $superAdmin = User::create([
                 'name' => 'Cesar',
                 'email' => 'cesar@celke.com.br',
+                'level_accss' => 0,
                 'password' => Hash::make('123456a', ['rounds' => 12])
             ]);
         }
@@ -26,6 +27,7 @@ class UserSeeder extends Seeder
             $admin = User::create([
                 'name' => 'Kelly',
                 'email' => 'kelly@celke.com.br',
+                'level_accss' => 1,
                 'password' => Hash::make('123456a', ['rounds' => 12])
             ]);
         }
@@ -34,6 +36,7 @@ class UserSeeder extends Seeder
             $teacher = User::create([
                 'name' => 'Jessica',
                 'email' => 'jessica@celke.com.br',
+                'level_accss' => 2,
                 'password' => Hash::make('123456a', ['rounds' => 12])
             ]);
         }
@@ -42,6 +45,7 @@ class UserSeeder extends Seeder
             $tutor = User::create([
                 'name' => 'Gabrielly',
                 'email' => 'gabrielly@celke.com.br',
+                'level_accss' => 3,
                 'password' => Hash::make('123456a', ['rounds' => 12])
             ]);
         }
@@ -50,6 +54,7 @@ class UserSeeder extends Seeder
             $student = User::create([
                 'name' => 'Marcos',
                 'email' => 'marcos@celke.com.br',
+                'level_accss' => 1,
                 'password' => Hash::make('123456a', ['rounds' => 12])
             ]);
         }

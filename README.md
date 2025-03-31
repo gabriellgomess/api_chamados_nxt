@@ -76,6 +76,7 @@ Esta é uma API desenvolvida em Laravel 11 para gerenciar um sistema de chamados
         "email": "seu-email@example.com",
         "password": "sua-senha",
         "password_confirmation": "sua-senha",
+        "level_access" : "0",
         "telefone": "123456789" // opcional
     }
     ```

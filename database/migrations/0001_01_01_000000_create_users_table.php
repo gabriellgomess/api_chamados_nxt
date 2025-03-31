@@ -15,6 +15,7 @@ return new class extends Migration
             $table->string('telefone')->nullable(); // Adiciona o campo telefone como opcional
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->unsignedBigInteger('level_access')->nullable();
             $table->rememberToken();
             $table->timestamps();
         });

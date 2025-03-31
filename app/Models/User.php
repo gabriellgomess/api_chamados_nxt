@@ -41,12 +41,18 @@ use Laravel\Sanctum\HasApiTokens;
  *         example="2023-01-01T00:00:00.000Z"
  *     ),
  *     @OA\Property(
+ *         property="level_access",
+ *         type="interger",
+ *         description="User's level access",
+ *         example="0"
+ *     ),
+ *     @OA\Property(
  *         property="updated_at",
  *         type="string",
  *         format="date-time",
  *         description="Timestamp when the user was last updated",
  *         example="2023-01-01T00:00:00.000Z"
- *     )
+ *     ),
  * )
  */
 class User extends Authenticatable
