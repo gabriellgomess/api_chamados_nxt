@@ -53,6 +53,10 @@ use Laravel\Sanctum\HasApiTokens;
  *         description="Timestamp when the user was last updated",
  *         example="2023-01-01T00:00:00.000Z"
  *     ),
+ *     @OA\Property(
+ *         property="atendente",
+ *         ref="#/components/schemas/Atendente"
+ *     ),
  * )
  */
 class User extends Authenticatable
@@ -92,5 +96,10 @@ class User extends Authenticatable
             'email_verified_at' => 'datetime',
             'password' => 'hashed',
         ];
+    }
+
+    public function atendente()
+    {
+        return $this->hasOne(Atendente::class);
     }
 }
